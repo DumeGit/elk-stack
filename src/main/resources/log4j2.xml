@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="WARN">
+    <Appenders>
+
+        <RollingFile name="FILE"
+                     fileName="./logs/event-service/event-service.log"
+                     filePattern="./logs/event-service/event-service-%d{yyyy-MM-dd}-%i.log.gz">
+
+            <PatternLayout
+                    pattern='%X{message_id} [%X{uuid} app_name="%X{app_name}" app_version="%X{app_version}" hostname="%X{hostname}"] %X{process_id} %C{1}: %m%n'/>
+
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB"/>
+                <TimeBasedTriggeringPolicy/>
+            </Policies>
+
+            <DefaultRolloverStrategy max="7" fileIndex="min"/>
+        </RollingFile>
+
+        <Console name="STDOUT" target="SYSTEM_OUT">
+            <PatternLayout pattern="%d{ISO8601} %-5p %c - %m%n"/>
+        </Console>
+
+    </Appenders>
+
+    <Loggers>
+        <Root level="info">
+            <AppenderRef ref="FILE"/>
+            <AppenderRef ref="STDOUT"/>
+        </Root>
+    </Loggers>
+</Configuration>
