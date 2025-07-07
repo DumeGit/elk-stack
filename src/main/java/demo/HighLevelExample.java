@@ -1,25 +1,5 @@
 package demo;
 
-import java.lang.management.ManagementFactory;
-import java.net.InetAddress;
-import java.time.Instant;
-import java.util.List;
-import java.util.UUID;
-import java.util.function.Function;
-
-import org.apache.http.HttpHost;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.impl.client.BasicCredentialsProvider;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.ThreadContext;
-import org.elasticsearch.client.RestClient;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-
 import co.elastic.clients.elasticsearch.ElasticsearchClient;
 import co.elastic.clients.elasticsearch._types.query_dsl.Query;
 import co.elastic.clients.elasticsearch.core.BulkRequest;
@@ -30,6 +10,24 @@ import co.elastic.clients.json.jackson.JacksonJsonpMapper;
 import co.elastic.clients.transport.ElasticsearchTransport;
 import co.elastic.clients.transport.rest_client.RestClientTransport;
 import co.elastic.clients.util.ObjectBuilder;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.ThreadContext;
+import org.elasticsearch.client.RestClient;
+
+import java.lang.management.ManagementFactory;
+import java.net.InetAddress;
+import java.time.Instant;
+import java.util.List;
+import java.util.UUID;
+import java.util.function.Function;
 
 public class HighLevelExample {
 
@@ -166,30 +164,23 @@ public class HighLevelExample {
   private static List<ElkEvent> createSampleEvents() {
     return List.of(
         createEvent("Building Scalable Micro-services with Spring Boot",
-            "workshop", "2024-07-05T13:00:00Z"),
+            EventType.WORKSHOP, "2024-07-05T13:00:00Z"),
         createEvent("Distributed Systems 101",
-            "tech-talk", "2024-06-12T17:30:00Z"),
+                EventType.TECH_TALK, "2024-06-12T17:30:00Z"),
         createEvent("Ansible Automation Workshop",
-            "workshop", "2024-05-30T09:00:00Z"),
+                EventType.WORKSHOP, "2024-05-30T09:00:00Z"),
         createEvent("Observability for Kubernetes",
-            "tech-talk", "2024-05-18T15:00:00Z"),
+                EventType.TECH_TALK, "2024-05-18T15:00:00Z"),
         createEvent("Data Engineering Bootcamp",
-            "workshop", "2024-08-20T08:30:00Z")
+                EventType.WORKSHOP, "2024-08-20T08:30:00Z")
     );
   }
 
   /**
    * Helper to create a single event
    */
-  private static ElkEvent createEvent(String title, String type, String datetime) {
-    ElkEvent event = new ElkEvent();
-    event.title = title;
-    event.eventType = type;
-    event.datetime = Instant.parse(datetime);
-    event.place = "TBA";
-    event.description = "Sample event for demo";
-    event.subTopics = List.of("technology", "learning");
-    return event;
+  private static ElkEvent createEvent(String title, EventType type, String datetime) {
+      return new ElkEvent(UUID.randomUUID().toString(), title, type, Instant.parse(datetime), "TBA", "Sample event for demo", List.of("technology", "learning"));
   }
 
   /**
@@ -273,7 +264,7 @@ public class HighLevelExample {
         .limit(3)
         .forEach(hit -> {
           ElkEvent event = hit.source();
-          LOG.debug("  - {} ({})", event.title, event.eventType);
+          LOG.debug("  - {} ({})", event.title(), event.eventType());
         });
   }
 

@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/elkstack.iml" filepath="$PROJECT_DIR$/elkstack.iml" />
+      <module fileurl="file://$PROJECT_DIR$/gs-maven.iml" filepath="$PROJECT_DIR$/gs-maven.iml" />
     </modules>
   </component>
 </project>
